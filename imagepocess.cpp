@@ -141,6 +141,7 @@ void concatenateImageChannel(uchar *rgb, int w, int h, QImage &image)
         }
     }
 }
+//RGB转YCrCb空间，主要为了利用Y通道
 
 void rgb2ycrcb(uchar *r, uchar *g, uchar *b, int size, float *y, float *cr, float *cb)
 {
@@ -151,6 +152,7 @@ void rgb2ycrcb(uchar *r, uchar *g, uchar *b, int size, float *y, float *cr, floa
         cr[i] = 0.439215 * r[i] - 0.367789 * g[i] - 0.071426 * b[i] + 128;
     }
 }
+//YCrCb空间处理后经此函数转回RGB
 
 void ycrcb2rgb(float *y, float *cr, float *cb, int size, uchar *r, uchar *g, uchar *b)
 {
@@ -205,6 +207,8 @@ void ycrcb2qimage(float *y, float *cr, float *cb, int width, int height, QImage 
     delete [] channels;
 }
 
+//根据图像RGB值计算各直方图
+
 QImage calculateHistogram(QImage &image, ImageChannel channel)
 {
     // obtain gray image
@@ -222,7 +226,7 @@ QImage calculateHistogram(QImage &image, ImageChannel channel)
 
     uchar *bits = nullptr;
     switch (channel) {
-        case ImageChannel::Y:
+        case ImageChannel::Y://先生成灰度图，计算灰度直方图
             hist_ior = qRgba(128, 128, 128, 255);
             bits = grayImage.bits();
             break;
